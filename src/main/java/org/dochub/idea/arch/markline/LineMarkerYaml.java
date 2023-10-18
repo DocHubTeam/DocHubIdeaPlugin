@@ -2,15 +2,14 @@ package org.dochub.idea.arch.markline;
 
 import com.intellij.codeInsight.daemon.*;
 import com.intellij.psi.PsiElement;
-import org.dochub.idea.arch.references.providers.RefAspectID;
-import org.dochub.idea.arch.references.providers.RefComponentID;
-import org.dochub.idea.arch.references.providers.RefContextID;
-import org.dochub.idea.arch.references.providers.RefDocsID;
+import org.dochub.idea.arch.references.References;
+import org.dochub.idea.arch.references.providers.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.yaml.psi.YAMLKeyValue;
 import org.jetbrains.yaml.psi.impl.YAMLPlainTextImpl;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import static org.dochub.idea.arch.markline.LineMarkerNavigator.*;
@@ -114,6 +113,7 @@ public class LineMarkerYaml extends LineMarkerProviderDescriptor {
     @Override
     public LineMarkerInfo<?> getLineMarkerInfo(@NotNull PsiElement element) {
         LineMarkerInfo result = null;
+
         if (RefComponentID.pattern().accepts(element)) {
             result = getLineMarkerInfoForComponent(element);
         } else if (RefDocsID.pattern().accepts(element)) {
@@ -122,6 +122,20 @@ public class LineMarkerYaml extends LineMarkerProviderDescriptor {
             result = getLineMarkerInfoForAspect(element);
         } else if (RefContextID.pattern().accepts(element)) {
             result = getLineMarkerInfoForContext(element);
+        } else {
+            List<References.Reference> refs = References.getRefs(element.getProject());
+            for (int f = 0; f < refs.size(); f++) {
+                References.Reference ref = refs.get(f);
+                if (ref.pattern.accepts(element)) {
+                    result = explainElement(element, new ElementExplain() {
+                        @Override
+                        public DocHubNavigationHandler register(String id) {
+                            return new DocHubNavigationHandler("entity/" + ref.entity, id);
+                        }
+                    });
+                    break;
+                }
+            }
         }
         return result;
     }

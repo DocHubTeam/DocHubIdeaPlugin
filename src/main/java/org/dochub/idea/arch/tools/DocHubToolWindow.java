@@ -14,6 +14,7 @@ import org.cef.handler.CefLoadHandler;
 import org.dochub.idea.arch.indexing.CacheBuilder;
 import org.dochub.idea.arch.jsonschema.EntityManager;
 import org.dochub.idea.arch.manifests.PlantUMLDriver;
+import org.dochub.idea.arch.references.References;
 import org.dochub.idea.arch.settings.SettingsState;
 import org.dochub.idea.arch.wizard.RootManifest;
 import org.apache.commons.io.*;
@@ -165,10 +166,10 @@ public class DocHubToolWindow extends JBCefBrowser {
         } else if (url.equals(Consts.HTML_RELOAD_URI)){
           reloadHtml(false);
         } else if (url.equals(Consts.ENTITIES_APPLY_SCHEMA)) {
-
           JsonNode schema = jsonObj.get("schema");
-          EntityManager.applySchema(project, schema.asText());
-
+          String schemaText = schema.asText();
+          EntityManager.applySchema(project, schemaText);
+          References.updateRefs(project, schemaText);
         } else if (url.equals(Consts.CLIPBOARD_COPY)) {
           Clipboard.copy(jsonObj.get("data").asText());
         } else if (url.equals(Consts.GET_SETTINGS)) {
