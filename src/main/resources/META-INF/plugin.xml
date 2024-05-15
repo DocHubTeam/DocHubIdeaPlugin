@@ -13,7 +13,7 @@
         <p>
             This release includes:
             <ul>
-                <li>DocHub core: v3.10.0;</li>
+                <li>DocHub core: v3.11.0;</li>
                 <li>Suggests for the structure of architecture manifests (yaml);</li>
                 <li>Suggests for the values of manifest fields;</li>
                 <li>Fast navigation through manifests;</li>
@@ -31,7 +31,8 @@
                 <li>Syntax color support in Markdown documents;</li>
                 <li>Syntax color support to JSONata DevTool;</li>
                 <li>Added Enterprise mode;</li>
-                <li>JSONata syntax support to IDE editor.</li>
+                <li>JSONata syntax support to IDE editor;</li>
+                <li>BPMN Editor.</li>
         </ul>
         </p>
     ]]></description>
