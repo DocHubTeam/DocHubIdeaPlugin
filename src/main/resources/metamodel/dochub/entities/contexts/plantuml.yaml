@@ -232,6 +232,8 @@ entities:
           
             /* Готовим данные для передачи в шаблон */
             {
+              "before": $context.uml."$before",
+              "after": $context.uml."$after",
               "renderCore": $renderCore,
               "presentation": $defConfig.defaultPresentation,
               "code": $header & $elements & $linksCode
