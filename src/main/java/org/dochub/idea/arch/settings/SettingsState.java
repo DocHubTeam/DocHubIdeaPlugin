@@ -26,11 +26,16 @@ public class SettingsState implements PersistentStateComponent<SettingsState> {
     public static String defaultRenderServerRequestType = "get";
     public static Boolean defaultIsEnterprisePortal = false;
     public static String defaultEnterprisePortal = "http://dochub.info";
+    public static String[] gitServerModes = { "None", "Gitlab", "Bitbucket" };
+
     public String usingMode = SettingsState.defaultUsingMode;
     public Boolean renderIsExternal = SettingsState.defaultIsExternalRender;
     public String serverRendering = SettingsState.defaultRenderServer;
     public String renderServerRequestType = SettingsState.defaultRenderServerRequestType;
     public String enterprisePortal = SettingsState.defaultEnterprisePortal;
+    public String gitServerMode = "None";
+    public String gitServer = "";
+    public String gitPersonalToken = "";
 
     public static SettingsState getInstance() {
         return ApplicationManager.getApplication().getService(SettingsState.class);

@@ -14,6 +14,8 @@ public class SettingComponent {
     private final JPanel myMainPanel;
     private final JPanel enterprisePanel;
     private final JPanel paramsPanel;
+    private final JPanel gitServerPanel;
+    private final JPanel gitSecurityPanel;
     private final DefaultComboBoxModel<String> modeModel = new DefaultComboBoxModel<>();
     private final DefaultComboBoxModel<String> renderServerRequestTypeModel = new DefaultComboBoxModel<>();
     private final ComboBox<String> usingMode = new ComboBox<>(modeModel);
@@ -22,7 +24,13 @@ public class SettingComponent {
     private final JBCheckBox isExternalRender = new JBCheckBox("External rendering");
     private final JBTextField enterprisePortal = new JBTextField();
 
+    private final JBTextField personalToken = new JBTextField();
+    private final JBTextField gitServer = new JBTextField();
+    private final DefaultComboBoxModel<String> gitServerModes = new DefaultComboBoxModel<>();
+    private final ComboBox<String> gitServerMode = new ComboBox<>(gitServerModes);
+
     public SettingComponent() {
+        gitServerModes.addAll(Arrays.asList(SettingsState.gitServerModes));
         modeModel.addAll(Arrays.asList(SettingsState.modes));
         renderServerRequestTypeModel.addAll(Arrays.asList(SettingsState.renderServerRequestTypes));
 
@@ -40,21 +48,41 @@ public class SettingComponent {
             }
         });
 
+        gitServerMode.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                updateVisible();
+            }
+        });
+
         enterprisePanel = FormBuilder.createFormBuilder()
                 .addLabeledComponent(new JBLabel("Enterprise portal: "), enterprisePortal, 1, false)
                 .addComponent(new JBLabel("IMPORTANT: All settings will get from enterprise portal."), 1)
                 .getPanel();
 
         paramsPanel = FormBuilder.createFormBuilder()
+                .addComponent(new JSeparator(SwingConstants.HORIZONTAL))
                 .addComponent(isExternalRender, 1)
                 .addLabeledComponent(new JBLabel("Render server: "), renderServer, 1, false)
                 .addLabeledComponent(new JBLabel("Render server request type: "), renderServerRequestType, 1, false)
+                .getPanel();
+
+        gitServerPanel = FormBuilder.createFormBuilder()
+                .addComponent(new JSeparator(SwingConstants.HORIZONTAL))
+                .addLabeledComponent(new JBLabel("Git server vendor: "), gitServerMode, 1, false)
+                .addLabeledComponent(new JBLabel("Git server: "), gitServer, 1, false)
+                .getPanel();
+
+        gitSecurityPanel = FormBuilder.createFormBuilder()
+                .addLabeledComponent(new JBLabel("Git personal token: "), personalToken, 1, false)
                 .getPanel();
 
         myMainPanel = FormBuilder.createFormBuilder()
                 .addLabeledComponent(new JBLabel("Using mode: "), usingMode, 1, false)
                 .addComponent(enterprisePanel, 1)
                 .addComponent(paramsPanel, 1)
+                .addComponent(gitServerPanel, 1)
+                .addComponent(gitSecurityPanel, 1)
                 .addComponentFillVertically(new JPanel(), 0)
                 .getPanel();
 
@@ -65,12 +93,19 @@ public class SettingComponent {
         if (usingMode.getSelectedIndex() == 1) {
             enterprisePanel.setVisible(true);
             paramsPanel.setVisible(false);
+            gitServerPanel.setVisible(false);
+            gitSecurityPanel.setVisible(true);
+            personalToken.setEnabled(true);
         } else {
             enterprisePanel.setVisible(false);
             paramsPanel.setVisible(true);
+            gitServerPanel.setVisible(true);
+            gitServer.setEnabled(gitServerMode.getSelectedIndex() != 0);
+            personalToken.setEnabled(gitServerMode.getSelectedIndex() != 0);
             renderServer.setEnabled(isExternalRender.isSelected());
             renderServerRequestType.setEnabled(isExternalRender.isSelected());
         }
+
     }
 
     public JPanel getPanel() {
@@ -79,6 +114,32 @@ public class SettingComponent {
 
     public JComponent getPreferredFocusedComponent() {
         return isExternalRender;
+    }
+
+    public String getGitPersonalToken() {
+        return personalToken.getText();
+    }
+
+    public void setGitPersonalToken(@NotNull String token) {
+        personalToken.setText(token);
+    }
+
+    public String getGitServerText() {
+        return gitServer.getText();
+    }
+
+    public void setGitServerText(@NotNull String url) {
+        gitServer.setText(url);
+   }
+
+    public String getGitServerModeText() {
+        return gitServerModes.getElementAt(gitServerMode.getSelectedIndex());
+    }
+
+    public void setGitServerModeText(@NotNull String mode) {
+        int index = gitServerModes.getIndexOf(mode);
+        if (index >= 0) gitServerMode.setSelectedIndex(index);
+        updateVisible();
     }
 
     public String getUsingModeText() {

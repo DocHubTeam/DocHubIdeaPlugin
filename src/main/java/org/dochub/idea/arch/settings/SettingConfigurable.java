@@ -38,6 +38,9 @@ public class SettingConfigurable implements Configurable {
         modified |= settingComponent.getIsExternalRenderBool() != settingsState.renderIsExternal;
         modified |= settingComponent.getEnterprisePortalText() != settingsState.enterprisePortal;
         modified |= !settingComponent.getUsingModeText().equals(settingsState.usingMode);
+        modified |= !settingComponent.getGitServerModeText().equals(settingsState.gitServerMode);
+        modified |= !settingComponent.getGitServerText().equals(settingsState.gitServer);
+        modified |= !settingComponent.getGitPersonalToken().equals(settingsState.gitPersonalToken);
         return modified;
     }
 
@@ -49,6 +52,9 @@ public class SettingConfigurable implements Configurable {
         settingsState.renderIsExternal = settingComponent.getIsExternalRenderBool();
         settingsState.usingMode = settingComponent.getUsingModeText();
         settingsState.enterprisePortal = settingComponent.getEnterprisePortalText();
+        settingsState.gitServerMode = settingComponent.getGitServerModeText();
+        settingsState.gitServer = settingComponent.getGitServerText();
+        settingsState.gitPersonalToken = settingComponent.getGitPersonalToken();
         SettingsState.DocHubSettingsMessage publisher = ApplicationManager.getApplication().getMessageBus()
                 .syncPublisher(SettingsState.ON_SETTING_CHANGED);
         publisher.on();
@@ -62,6 +68,9 @@ public class SettingConfigurable implements Configurable {
         settingComponent.setIsExternalRenderBool(settingsState.renderIsExternal);
         settingComponent.setUsingModeText(settingsState.usingMode);
         settingComponent.setEnterprisePortalText(settingsState.enterprisePortal);
+        settingComponent.setGitServerModeText(settingsState.gitServerMode);
+        settingComponent.setGitPersonalToken(settingsState.gitPersonalToken);
+        settingComponent.setGitServerText(settingsState.gitServer);
     }
 
     @Override

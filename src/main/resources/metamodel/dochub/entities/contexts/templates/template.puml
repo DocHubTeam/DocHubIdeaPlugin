@@ -177,7 +177,7 @@ skinparam component<<Person>> {
 !endprocedure
 
 left to right direction
-
+{{&before}}
 {{&code}}
-
+{{&after}}
 @enduml

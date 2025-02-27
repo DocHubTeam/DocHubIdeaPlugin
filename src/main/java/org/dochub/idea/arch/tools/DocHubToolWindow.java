@@ -202,6 +202,27 @@ public class DocHubToolWindow extends JBCefBrowser {
           render.put("request_type", settingsState.renderServerRequestType);
           response.put("render", render);
 
+          // Получаем переменные среды
+          Map<String, Object> env = new HashMap<>();
+          for (String envName : System.getenv().keySet()) {
+            if(envName.startsWith("DOCHUB_IDE_")) {
+              env.put(envName, System.getenv(envName));
+            }
+            // System.out.format("%s=%s%n", envName, env.get(envName));
+          }
+
+          // Если указаны параметры интеграции, передаем их
+          if(settingsState.isEnterprise() && settingsState.gitServerMode.equals("Gitlab")) {
+            env.put("DOCHUB_IDE_GITLAB_URL", settingsState.gitServer);
+          } else if(settingsState.isEnterprise() && settingsState.gitServerMode.equals("Bitbucket")) {
+            env.put("DOCHUB_IDE_BITBUCKET_URL", settingsState.gitServer);
+          }
+
+          if(!settingsState.gitPersonalToken.isEmpty()) {
+            env.put("DOCHUB_IDE_PERSONAL_TOKEN", settingsState.gitPersonalToken);
+          }
+
+          response.put("env", env);
           result.append(mapper.writeValueAsString(response));
         } else {
           return new JBCefJSQuery.Response("", 404, "No found: " + url);
