@@ -63,7 +63,9 @@ public class DocHubToolWindow extends JBCefBrowser {
         }
         html = html.replaceAll("\\%\\$dochub-api-interface-func\\%", sourceQuery.getFuncName());
       }
-
+      // Сначала ресетим то, что есть
+      loadHTML("", "");
+      // Затем загружаем то, что нужно
       if (currentURL.length() > 0) {
         loadHTML(html, currentURL);
       } else {
