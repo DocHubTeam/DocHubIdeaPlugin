@@ -28,6 +28,8 @@ val pluginUntilBuild: String by project
 val plantumlVersion: String by project
 val elkVersion: String by project
 val jflexVersion: String by project
+val grammarKitVersion: String by project
+
 
 repositories {
     mavenCentral()
@@ -46,6 +48,8 @@ dependencies {
         jetbrainsRuntime()
     }
     implementation("org.jetbrains.intellij.deps.jflex:jflex:$jflexVersion")
+    // implementation("org.jetbrains.grammarkit:${grammarKitVersion}")
+
     implementation("com.ibm.jsonata4java:JSONata4Java:$JSONataVersion")
     implementation("net.sourceforge.plantuml:plantuml:$plantumlVersion")
     implementation("org.eclipse.elk:org.eclipse.elk.alg.layered:$elkVersion")
@@ -112,5 +116,12 @@ tasks {
         pathToParser.set(genParserClassPath)
         pathToPsiRoot.set(genPsiPath)
         purgeOldFiles.set(true)
+
+        //val currentClasspath = this.classpath
+        //val ideaLibs = project.configurations.getByName("intellijPlatformDependency")
+        //this.setClasspath(ideaLibs + currentClasspath)
+
+        val ideaLibs = configurations.intellijPlatformClasspath.get()
+        this.setClasspath(ideaLibs + this.classpath)
     }
 }
