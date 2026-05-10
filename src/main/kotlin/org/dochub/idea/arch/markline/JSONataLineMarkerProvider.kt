@@ -23,7 +23,8 @@ class JSONataLineMarkerProvider: LineMarkerProvider {
                 AllIcons.Actions.Execute,
                 { "Выполнить" },
                 { _ , elt ->
-                    val yamlElement = elt.get()[INJECTED_IN_ELEMENT]?.element?.parent
+                    //val yamlElement = elt.get()[INJECTED_IN_ELEMENT]?.element?.parent
+                    val yamlElement = elt.containingFile.getUserData(INJECTED_IN_ELEMENT)?.element?.parent
                     if ((yamlElement as? YAMLKeyValue)?.keyText == "source") {
                         (yamlElement.parent?.parent as? YAMLKeyValue)?.run {
                             elt.project

@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.grammarkit.tasks.GenerateLexerTask
 import org.jetbrains.grammarkit.tasks.GenerateParserTask
+import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 
 plugins {
     id("java")
@@ -46,6 +47,9 @@ dependencies {
         val pluginsList: List<String> = platformPlugins.split(',').map { it.trim() }.filter { it.isNotEmpty() };
         bundledPlugins( pluginsList )
         jetbrainsRuntime()
+
+        testFramework(TestFrameworkType.Platform)
+        testFramework(TestFrameworkType.JUnit5)
     }
     implementation("org.jetbrains.intellij.deps.jflex:jflex:$jflexVersion")
     // implementation("org.jetbrains.grammarkit:${grammarKitVersion}")
@@ -57,6 +61,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
     // implementation("org.javassist:javassist:3.29.2-GA")
 
+    testImplementation("junit:junit:4.13.2")
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
 
