@@ -93,7 +93,8 @@ public class SettingComponent {
         if (usingMode.getSelectedIndex() == 1) {
             enterprisePanel.setVisible(true);
             paramsPanel.setVisible(false);
-            gitServerPanel.setVisible(false);
+            gitServerPanel.setVisible(true);
+            gitServer.setEnabled(gitServerMode.getSelectedIndex() != 0);
             gitSecurityPanel.setVisible(true);
             personalToken.setEnabled(true);
         } else {
